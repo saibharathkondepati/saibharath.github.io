@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sai Bharath Kondepati — Java Full Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --white: #ffffff;
+    --off-white: #f8f7f4;
+    --light: #f0ede8;
+    --border: #e2ddd6;
+    --border-dark: #c8c0b4;
+    --text: #1a1814;
+    --text-mid: #4a4540;
+    --text-muted: #8a837a;
+    --navy: #1b2d4f;
+    --navy-light: #2a4070;
+    --gold: #b8861b;
+    --gold-light: #d4a840;
+    --gold-bg: #fdf6e8;
+    --green: #1a6b3c;
+    --green-bg: #edf7f2;
+    --blue-bg: #edf3fb;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--white);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 64px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--navy); text-decoration: none; letter-spacing: -0.01em;
+  }
+  .nav-logo span { color: var(--gold); }
+  nav ul { list-style: none; display: flex; gap: 36px; align-items: center; }
+  nav a { color: var(--text-mid); text-decoration: none; font-size: 0.83rem; font-weight: 500; transition: color 0.2s; }
+  nav a:hover { color: var(--navy); }
+  .nav-cta { background: var(--navy) !important; color: var(--white) !important; padding: 9px 22px; border-radius: 4px; font-weight: 600 !important; }
+  .nav-cta:hover { background: var(--navy-light) !important; color: var(--white) !important; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: flex; align-items: center;
+    padding: 100px 64px 80px; background: var(--white);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-inner {
+    max-width: 1200px; width: 100%; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 400px; gap: 80px; align-items: center;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-bg); color: var(--green);
+    border: 1px solid rgba(26,107,60,0.2);
+    padding: 6px 14px; border-radius: 100px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .hero-tag::before {
+    content: ''; width: 7px; height: 7px;
+    background: var(--green); border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(0.7);} }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 5vw, 4.5rem); font-weight: 700;
+    line-height: 1.08; letter-spacing: -0.02em;
+    color: var(--navy); margin-bottom: 8px;
+  }
+  .hero-role { font-size: 1.1rem; font-weight: 400; color: var(--gold); margin-bottom: 24px; }
+  .hero-desc { font-size: 0.96rem; line-height: 1.85; color: var(--text-mid); max-width: 520px; margin-bottom: 36px; }
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 26px; font-size: 0.84rem; font-weight: 600;
+    font-family: 'Inter', sans-serif; text-decoration: none;
+    border-radius: 4px; transition: all 0.22s; letter-spacing: 0.01em;
+  }
+  .btn-primary { background: var(--navy); color: var(--white); border: 1.5px solid var(--navy); }
+  .btn-primary:hover { background: var(--navy-light); border-color: var(--navy-light); }
+  .btn-secondary { background: var(--white); color: var(--navy); border: 1.5px solid var(--border-dark); }
+  .btn-secondary:hover { border-color: var(--navy); background: var(--off-white); }
+
+  /* Hero card */
+  .hero-card {
+    background: var(--off-white); border: 1px solid var(--border);
+    border-radius: 12px; padding: 36px 32px;
+    opacity: 0; animation: fadeIn 0.8s ease forwards 0.5s;
+  }
+  @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+  .hc-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+  .hc-role { font-size: 0.78rem; color: var(--gold); font-weight: 600; margin-bottom: 24px; letter-spacing: 0.02em; }
+  .info-row { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px; }
+  .info-icon {
+    width: 32px; height: 32px; background: var(--white);
+    border: 1px solid var(--border); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .info-icon svg { width: 14px; height: 14px; color: var(--navy); }
+  .info-label { font-size: 0.66rem; color: var(--text-muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .info-val { font-size: 0.81rem; color: var(--text); font-weight: 500; }
+  .info-val a { color: var(--navy); text-decoration: none; }
+  .info-val a:hover { color: var(--gold); text-decoration: underline; }
+  .hc-divider { height: 1px; background: var(--border); margin: 20px 0; }
+  .stats-row {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 1px; background: var(--border); border-radius: 8px; overflow: hidden;
+  }
+  .stat-box { background: var(--white); padding: 16px 12px; text-align: center; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--navy); line-height: 1; }
+  .stat-lbl { font-size: 0.62rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; margin-top: 4px; line-height: 1.4; }
+
+  .hero-left { opacity: 0; animation: fadeUp 0.8s ease forwards 0.2s; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px);} to{opacity:1;transform:translateY(0);} }
+
+  /* SECTIONS */
+  .sec-wrap { border-bottom: 1px solid var(--border); }
+  .sec-bg { background: var(--off-white); }
+  .section { padding: 88px 64px; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 12px;
+  }
+  .section-label::after { content: ''; width: 40px; height: 1px; background: var(--border-dark); }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3vw, 2.6rem); font-weight: 700;
+    color: var(--navy); letter-spacing: -0.02em;
+    line-height: 1.15; margin-bottom: 44px;
+  }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* SKILLS */
+  .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
+  .skill-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 10px; padding: 26px 26px 22px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .skill-card:hover { box-shadow: 0 4px 18px rgba(27,45,79,0.08); border-color: var(--border-dark); }
+  .skill-card-icon { font-size: 1.2rem; margin-bottom: 12px; display: block; }
+  .skill-card-title { font-weight: 700; font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin-bottom: 14px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+  .tag {
+    padding: 4px 10px; border-radius: 4px; font-size: 0.71rem; font-weight: 500;
+    background: var(--off-white); color: var(--text-mid); border: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace; transition: all 0.18s;
+  }
+  .tag:hover { background: var(--blue-bg); border-color: rgba(27,45,79,0.25); color: var(--navy); }
+
+  /* METRICS */
+  .metrics-strip { background: var(--navy); padding: 60px 64px; }
+  .metrics-inner { max-width: 1200px; margin: 0 auto; }
+  .metrics-head {
+    display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; gap: 16px; flex-wrap: wrap;
+  }
+  .metrics-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--white); }
+  .metrics-sub { font-size: 0.8rem; color: rgba(255,255,255,0.5); max-width: 260px; line-height: 1.65; text-align: right; }
+  .metrics-grid {
+    display: grid; grid-template-columns: repeat(6,1fr);
+    gap: 1px; background: rgba(255,255,255,0.12);
+    border-radius: 10px; overflow: hidden;
+  }
+  .metric { background: rgba(255,255,255,0.04); padding: 32px 16px; text-align: center; transition: background 0.2s; }
+  .metric:hover { background: rgba(255,255,255,0.09); }
+  .metric-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold-light); line-height: 1; margin-bottom: 8px; }
+  .metric-lbl { font-size: 0.67rem; color: rgba(255,255,255,0.5); letter-spacing: 0.05em; line-height: 1.5; }
+
+  /* EXPERIENCE */
+  .exp-layout { display: grid; grid-template-columns: 240px 1fr; gap: 64px; }
+  .exp-sidebar { position: sticky; top: 80px; height: fit-content; }
+  .exp-sidebar-title { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 700; color: var(--navy); line-height: 1.2; margin-bottom: 16px; }
+  .exp-sidebar p { font-size: 0.8rem; color: var(--text-muted); line-height: 1.8; }
+  .yoe-badge {
+    margin-top: 24px; display: inline-flex; flex-direction: column;
+    background: var(--gold-bg); border: 1px solid rgba(184,134,27,0.25);
+    border-radius: 8px; padding: 16px 20px;
+  }
+  .yoe-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .yoe-lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; letter-spacing: 0.05em; margin-top: 4px; }
+
+  .exp-list { display: flex; flex-direction: column; gap: 24px; }
+  .exp-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; transition: box-shadow 0.25s, border-color 0.25s;
+  }
+  .exp-card:hover { box-shadow: 0 6px 24px rgba(27,45,79,0.09); border-color: var(--border-dark); }
+  .exp-card-header {
+    padding: 24px 28px 22px; display: flex;
+    justify-content: space-between; align-items: flex-start;
+    border-bottom: 1px solid var(--border); gap: 16px; flex-wrap: wrap;
+  }
+  .exp-co { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .exp-role-line { font-size: 0.79rem; color: var(--text-muted); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .exp-role-line strong { color: var(--text-mid); font-weight: 600; }
+  .sep-dot { width: 3px; height: 3px; background: var(--border-dark); border-radius: 50%; flex-shrink: 0; }
+  .period-pill {
+    background: var(--blue-bg); color: var(--navy);
+    border: 1px solid rgba(27,45,79,0.14); padding: 5px 12px;
+    border-radius: 100px; font-size: 0.71rem; font-weight: 600;
+    white-space: nowrap; font-family: 'JetBrains Mono', monospace; flex-shrink: 0;
+  }
+  .current-pill { background: var(--green-bg); color: var(--green); border-color: rgba(26,107,60,0.2); }
+
+  .exp-card-body { padding: 22px 28px 26px; }
+  .exp-points { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 9px; }
+  .ep {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 0.79rem; color: var(--text-mid); line-height: 1.65;
+    padding: 11px 14px; background: var(--off-white); border-radius: 6px;
+    border: 1px solid transparent; transition: all 0.18s;
+  }
+  .ep:hover { background: var(--white); border-color: var(--border); }
+  .ep-arrow { color: var(--gold); font-size: 0.68rem; flex-shrink: 0; margin-top: 3px; }
+  .ep strong { color: var(--navy); font-weight: 600; }
+
+  /* EDUCATION */
+  .edu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .edu-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 10px; padding: 36px 32px;
+    display: flex; gap: 20px; transition: box-shadow 0.2s;
+  }
+  .edu-card:hover { box-shadow: 0 4px 18px rgba(27,45,79,0.07); }
+  .edu-icon {
+    width: 48px; height: 48px; border-radius: 10px; background: var(--navy);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.3rem;
+  }
+  .edu-degree { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .edu-field { font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
+  .edu-school { font-size: 0.77rem; color: var(--text-muted); line-height: 1.65; }
+
+  /* CONTACT */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+  .contact-left h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3vw, 2.6rem); font-weight: 700; color: var(--navy); letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 16px; }
+  .contact-left p { font-size: 0.85rem; color: var(--text-muted); line-height: 1.8; max-width: 380px; margin-bottom: 28px; }
+
+  .avail-box {
+    background: var(--green-bg); border: 1px solid rgba(26,107,60,0.2);
+    border-radius: 10px; padding: 22px 24px; margin-bottom: 18px;
+  }
+  .avail-title {
+    font-weight: 700; font-size: 0.82rem; color: var(--green); margin-bottom: 6px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .avail-title::before { content:''; width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s ease-in-out infinite; }
+  .avail-box p { font-size: 0.79rem; color: var(--text-muted); line-height: 1.7; }
+
+  .contact-cards { display: flex; flex-direction: column; gap: 12px; }
+  .contact-card {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px; text-decoration: none; transition: all 0.22s;
+  }
+  .contact-card:hover { border-color: var(--navy); box-shadow: 0 4px 14px rgba(27,45,79,0.09); transform: translateX(4px); }
+  .cc-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cc-icon svg { width: 16px; height: 16px; }
+  .cc-label { font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .cc-val { font-size: 0.83rem; font-weight: 600; color: var(--navy); }
+  .cc-arrow { margin-left: auto; color: var(--border-dark); font-size: 1.1rem; transition: transform 0.2s, color 0.2s; }
+  .contact-card:hover .cc-arrow { transform: translateX(4px); color: var(--navy); }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy); padding: 32px 64px;
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .footer-name { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--white); font-size: 1.05rem; }
+  .footer-copy { font-size: 0.73rem; color: rgba(255,255,255,0.4); }
+
+  @media (max-width: 960px) {
+    nav { padding: 0 24px; }
+    nav ul { display: none; }
+    .hero { padding: 80px 24px 60px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .section { padding: 64px 24px; }
+    .metrics-strip { padding: 56px 24px; }
+    .metrics-grid { grid-template-columns: repeat(3,1fr); }
+    .metrics-sub { text-align: left; }
+    .exp-layout { grid-template-columns: 1fr; gap: 28px; }
+    .exp-sidebar { position: static; }
+    .edu-grid, .contact-grid { grid-template-columns: 1fr; gap: 24px; }
+    footer { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Sai Bharath<span>.</span></a>
+  <ul>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact" class="nav-cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">Open to Opportunities</div>
+      <h1>Sai Bharath<br>Kondepati</h1>
+      <p class="hero-role">Senior Java Full Stack Developer</p>
+      <p class="hero-desc">Senior Software Engineer with 6+ years of experience building scalable microservices, event-driven architectures, and AI-powered applications. Currently driving banking innovation at Truist Bank, Raleigh NC.</p>
+      <div class="hero-actions">
+        <a href="#experience" class="btn btn-primary">View Experience →</a>
+        <a href="mailto:sbharath.k709@gmail.com" class="btn btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hc-name">Sai Bharath Kondepati</div>
+      <div class="hc-role">Java Full Stack Developer · Truist Bank</div>
+
+      <div class="info-row">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+        <div><div class="info-label">Email</div><div class="info-val"><a href="mailto:sbharath.k709@gmail.com">sbharath.k709@gmail.com</a></div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></div>
+        <div><div class="info-label">LinkedIn</div><div class="info-val"><a href="https://linkedin.com/in/sai-kondepati-18005b207" target="_blank">sai-kondepati-18005b207</a></div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 015.13 12.8 19.79 19.79 0 012.06 4.17 2 2 0 014.05 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.84.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><div class="info-label">Phone</div><div class="info-val">+1 (660) 528-2255</div></div>
+      </div>
+      <div class="info-row">
+        <div class="info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div><div class="info-label">Location</div><div class="info-val">Raleigh, NC · United States</div></div>
+      </div>
+
+      <div class="hc-divider"></div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num">6+</div><div class="stat-lbl">Years Exp</div></div>
+        <div class="stat-box"><div class="stat-num">4</div><div class="stat-lbl">Companies</div></div>
+        <div class="stat-box"><div class="stat-num">85%</div><div class="stat-lbl">Test Cover.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<div class="sec-wrap sec-bg">
+  <div class="section" id="skills">
+    <div class="section-label reveal">Technical Expertise</div>
+    <h2 class="section-title reveal">Core Skills &amp; Technologies</h2>
+    <div class="skills-grid reveal">
+      <div class="skill-card">
+        <span class="skill-card-icon">☕</span>
+        <div class="skill-card-title">Backend Development</div>
+        <div class="tags">
+          <span class="tag">Java 17+</span><span class="tag">Spring Boot</span><span class="tag">Spring Cloud</span>
+          <span class="tag">Hibernate</span><span class="tag">JPA</span><span class="tag">REST APIs</span>
+          <span class="tag">Swagger</span><span class="tag">Resilience4j</span><span class="tag">MuleSoft</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">⚛️</span>
+        <div class="skill-card-title">Frontend Development</div>
+        <div class="tags">
+          <span class="tag">React.js</span><span class="tag">Redux</span><span class="tag">JavaScript</span>
+          <span class="tag">TypeScript</span><span class="tag">Axios</span><span class="tag">Custom Hooks</span>
+          <span class="tag">RBAC</span><span class="tag">Lazy Loading</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">☁️</span>
+        <div class="skill-card-title">Cloud &amp; DevOps</div>
+        <div class="tags">
+          <span class="tag">AWS ECS/ECR</span><span class="tag">Kubernetes</span><span class="tag">Docker</span>
+          <span class="tag">Terraform</span><span class="tag">Jenkins</span><span class="tag">GitLab CI/CD</span>
+          <span class="tag">OpenShift</span><span class="tag">CloudFormation</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">🗄️</span>
+        <div class="skill-card-title">Data &amp; Messaging</div>
+        <div class="tags">
+          <span class="tag">Apache Kafka</span><span class="tag">Redis</span><span class="tag">PostgreSQL</span>
+          <span class="tag">MongoDB</span><span class="tag">Oracle</span><span class="tag">DynamoDB</span>
+          <span class="tag">MySQL</span><span class="tag">Kafka Connect</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">🔐</span>
+        <div class="skill-card-title">Security</div>
+        <div class="tags">
+          <span class="tag">OAuth2</span><span class="tag">JWT</span><span class="tag">mTLS</span>
+          <span class="tag">RBAC</span><span class="tag">Rate Limiting</span><span class="tag">API Gateway</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="skill-card-icon">🤖</span>
+        <div class="skill-card-title">AI &amp; Emerging Tech</div>
+        <div class="tags">
+          <span class="tag">OpenAI GPT</span><span class="tag">RAG Pipelines</span><span class="tag">Embeddings</span>
+          <span class="tag">Semantic Search</span><span class="tag">Agentic AI</span><span class="tag">GitHub Copilot</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- METRICS -->
+<div class="metrics-strip">
+  <div class="metrics-inner">
+    <div class="metrics-head reveal">
+      <div class="metrics-title">Impact by the Numbers</div>
+      <div class="metrics-sub">Quantified results delivered across banking, healthcare &amp; enterprise systems.</div>
+    </div>
+    <div class="metrics-grid reveal">
+      <div class="metric"><div class="metric-num">40%</div><div class="metric-lbl">API Response Improvement</div></div>
+      <div class="metric"><div class="metric-num">50%</div><div class="metric-lbl">DB Execution Time Reduced</div></div>
+      <div class="metric"><div class="metric-num">85%+</div><div class="metric-lbl">Test Coverage Achieved</div></div>
+      <div class="metric"><div class="metric-num">30%</div><div class="metric-lbl">Security Enhancement</div></div>
+      <div class="metric"><div class="metric-num">10K+</div><div class="metric-lbl">Daily Requests Processed</div></div>
+      <div class="metric"><div class="metric-num">30%</div><div class="metric-lbl">Dev Time Saved via Copilot</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="sec-wrap">
+  <div class="section" id="experience">
+    <div class="exp-layout">
+
+      <div class="exp-sidebar reveal">
+        <div class="section-label">Career History</div>
+        <div class="exp-sidebar-title">Work Experience</div>
+        <p>6+ years delivering production-grade systems across banking, healthcare, and enterprise technology sectors in the US and India.</p>
+        <div class="yoe-badge">
+          <div class="yoe-num">6+</div>
+          <div class="yoe-lbl">Years of Experience</div>
+        </div>
+      </div>
+
+      <div class="exp-list">
+
+        <div class="exp-card reveal">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-co">Truist Bank</div>
+              <div class="exp-role-line">
+                <strong>Java Full Stack Developer</strong>
+                <span class="sep-dot"></span>
+                <span>📍 Raleigh, NC</span>
+              </div>
+            </div>
+            <div class="period-pill current-pill">Jan 2025 — Present</div>
+          </div>
+          <div class="exp-card-body">
+            <div class="exp-points">
+              <div class="ep"><span class="ep-arrow">▸</span><span>Delivered Spring Boot microservices achieving <strong>25% latency reduction</strong> and <strong>30% security improvement</strong> for high-volume banking APIs.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Implemented OAuth2 Authorization Code &amp; Device Code flows with JWT for enterprise-wide access control.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Reduced PostgreSQL execution time by <strong>50%</strong> through Hibernate/JPA query optimization.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Led enterprise-wide <strong>mTLS implementation</strong> across DEV, SIT, UAT, and PROD environments.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Built Kafka event-driven architecture processing <strong>millions of daily transactions</strong> with 30% efficiency gain.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Deployed Redis distributed caching, accelerating API response times by <strong>40%</strong>.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Engineered <strong>RAG pipelines</strong> and agentic AI (tool-calling agents) within Spring Boot + React applications.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Semantic search with OpenAI GPT orchestration &amp; embeddings for enhanced content retrieval accuracy.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Increased test coverage from <strong>50% → 85%+</strong> using JUnit5 and Mockito.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Containerized microservices with Docker; deployed on Kubernetes (OpenShift) and AWS ECS.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>ReactJS + Redux frontend achieving <strong>20% engagement lift</strong> and 30% loading time reduction.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Migrated legacy TIBCO services to MuleSoft, improving scalability and long-term maintainability.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-co">Abbott Laboratories</div>
+              <div class="exp-role-line">
+                <strong>Full Stack Java Developer</strong>
+                <span class="sep-dot"></span>
+                <span>📍 Irving, TX</span>
+              </div>
+            </div>
+            <div class="period-pill">Mar 2023 — Dec 2024</div>
+          </div>
+          <div class="exp-card-body">
+            <div class="exp-points">
+              <div class="ep"><span class="ep-arrow">▸</span><span>Centralized API Gateway via Spring Cloud Gateway processing <strong>10,000+ daily requests</strong> with 30% latency reduction.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>OAuth2 + JWT validation with rate limiting and request filtering at gateway level.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Built ReactJS apps with RBAC, protected routes, lazy loading, memoization, and modern hook patterns.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>AWS ECS deployments with <strong>zero-downtime releases</strong>, auto-scaling, and traffic splitting.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Provisioned AWS infrastructure (VPCs, ECS/Fargate, ECR, IAM) using Terraform IaC.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>CI/CD automation with GitLab CI and AWS CodePipeline for multi-environment deployments.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Reduced development time by <strong>20–30%</strong> using GitHub Copilot for endpoint generation and tests.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>SNAP &amp; TANF case management modules for government assistance programs, reducing processing durations.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-co">CITI Bank</div>
+              <div class="exp-role-line">
+                <strong>Java Developer</strong>
+                <span class="sep-dot"></span>
+                <span>📍 Kolkata, India</span>
+              </div>
+            </div>
+            <div class="period-pill">Jan 2021 — Aug 2022</div>
+          </div>
+          <div class="exp-card-body">
+            <div class="exp-points">
+              <div class="ep"><span class="ep-arrow">▸</span><span>Spring Boot microservices on Docker + AWS, streamlining banking operations with significant cost savings.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Redis caching handling <strong>1,000+ requests/second</strong>, greatly reducing database load.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Kafka producers/consumers for high-throughput asynchronous event-driven microservice communication.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>AWS infrastructure with Terraform and CloudFormation for enhanced reliability and scalability.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Multi-environment deployments via Docker, Jenkins, Kubernetes — <strong>30% operational efficiency boost</strong>.</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-card-header">
+            <div>
+              <div class="exp-co">Cisco</div>
+              <div class="exp-role-line">
+                <strong>Backend Java Developer</strong>
+                <span class="sep-dot"></span>
+                <span>📍 Hyderabad, India</span>
+              </div>
+            </div>
+            <div class="period-pill">Mar 2020 — Dec 2020</div>
+          </div>
+          <div class="exp-card-body">
+            <div class="exp-points">
+              <div class="ep"><span class="ep-arrow">▸</span><span>RESTful APIs with Spring Boot and Hibernate, significantly improving application responsiveness.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Oracle database optimization via advanced query tuning and JDBC Connection Pooling.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Multithreading for concurrency; JMeter and JUnit performance benchmarking.</span></div>
+              <div class="ep"><span class="ep-arrow">▸</span><span>Agile Scrum delivery with Jira, Maven, Jenkins, and Gradle.</span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDUCATION -->
+<div class="sec-bg sec-wrap">
+  <div class="section" id="education">
+    <div class="section-label reveal">Academics</div>
+    <h2 class="section-title reveal">Education</h2>
+    <div class="edu-grid reveal">
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-degree">Master of Science</div>
+          <div class="edu-field">Applied Computer Science</div>
+          <div class="edu-school">Northwest Missouri State University<br>Maryville, MO, United States</div>
+        </div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">🏛️</div>
+        <div>
+          <div class="edu-degree">Bachelor of Technology</div>
+          <div class="edu-field">Computer Science &amp; Engineering</div>
+          <div class="edu-school">Gayatri Vidya Parishad College of Engineering<br>Vizag, Andhra Pradesh, India</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="sec-wrap">
+  <div class="section" id="contact">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <div class="section-label">Get In Touch</div>
+        <h2>Let's Work<br>Together</h2>
+        <p>Open to senior engineering roles in distributed systems, full-stack Java development, or AI-powered platforms. Currently based in the United States.</p>
+        <a href="mailto:sbharath.k709@gmail.com" class="btn btn-primary">Send an Email →</a>
+      </div>
+      <div class="reveal">
+        <div class="avail-box">
+          <div class="avail-title">Available for Opportunities</div>
+          <p>Open to full-time positions in senior Java Full Stack, distributed systems, or AI engineering roles across the United States.</p>
+        </div>
+        <div class="contact-cards">
+          <a href="mailto:sbharath.k709@gmail.com" class="contact-card">
+            <div class="cc-icon" style="background:#edf3fb;"><svg viewBox="0 0 24 24" fill="none" stroke="#1b2d4f" stroke-width="1.8"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+            <div><div class="cc-label">Email</div><div class="cc-val">sbharath.k709@gmail.com</div></div>
+            <span class="cc-arrow">›</span>
+          </a>
+          <a href="https://linkedin.com/in/sai-kondepati-18005b207" target="_blank" class="contact-card">
+            <div class="cc-icon" style="background:#e8f0f9;"><svg viewBox="0 0 24 24" fill="none" stroke="#0077b5" stroke-width="1.8"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg></div>
+            <div><div class="cc-label">LinkedIn</div><div class="cc-val">sai-kondepati-18005b207</div></div>
+            <span class="cc-arrow">›</span>
+          </a>
+          <a href="tel:+16605282255" class="contact-card">
+            <div class="cc-icon" style="background:#edf7f2;"><svg viewBox="0 0 24 24" fill="none" stroke="#1a6b3c" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 015.13 12.8 19.79 19.79 0 012.06 4.17 2 2 0 014.05 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.9.34 1.84.57 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+            <div><div class="cc-label">Phone</div><div class="cc-val">+1 (660) 528-2255</div></div>
+            <span class="cc-arrow">›</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-name">Sai Bharath Kondepati</span>
+  <span class="footer-copy">© 2025 · Java Full Stack Developer · Raleigh, NC</span>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  function animateNum(el, target, suffix) {
+    let start = null;
+    const step = ts => {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / 1600, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const numObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const txt = e.target.textContent;
+        const num = parseInt(txt);
+        const suf = txt.replace(/[0-9]/g, '');
+        animateNum(e.target, num, suf);
+        numObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.metric-num, .stat-num').forEach(el => numObs.observe(el));
+</script>
+</body>
+</html>
